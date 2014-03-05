@@ -1,9 +1,11 @@
 from django.test import TestCase
-from lists.views import home_page
 from django.core.urlresolvers import resolve
 from django.http import HttpResponse
 from django.http import HttpRequest
 from django.template.loader import render_to_string
+
+from lists.views import home_page
+from lists.models import Item
 # Create your tests here.
 class SmokeTest(TestCase):
     def test_root_url_resolves_to_home_page_view(self):
@@ -30,3 +32,20 @@ class SmokeTest(TestCase):
         )
         self.assertEqual(response.content.decode(), expected_html)
         self.assertIn('A new list item', response.content.decode())
+
+class ItemModelTest(TestCase):
+
+    def test_saving_and_retrieving_items(self):
+        firstItem = Item()
+        firstItem.text = 'The first(ever) list item'
+        firstItem.save()
+
+        second_item = Item()
+        second_item.text = 'I am Second Item'
+        second_item.save()
+
+        saved_items = Item.objects.all()
+        self.assertEqual(saved_items.count(),2)
+
+        self.assertEqual(saved_items[0].text,'The first(ever) list item')
+        self.assertEqual(saved_items[1].text,'I am Second Item')
