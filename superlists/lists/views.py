@@ -7,13 +7,11 @@ def home_page(request):
     if request.method == 'POST':
         new_item_text = request.POST['item_text']
         Item.objects.create(text=new_item_text)
-        return redirect('/')
+        return redirect('/lists/the-only-list-in-the-world/')
+    return render(request, 'home.html')
+    #items = Item.objects.all()
+    #returnDict = {'items': items}
+    #return render(request,'home.html', returnDict)
+def view_list(request):
     items = Item.objects.all()
-    returnDict = {'items': items}
-    return render(request,'home.html', returnDict)
-#    else:
-#        new_item_text = ''
-#    returnDict = {
-#        'new_item_text': new_item_text,
-#    }
-#    return render(request,'home.html', returnDict)
+    return render(request, 'list.html', {'items': items})
